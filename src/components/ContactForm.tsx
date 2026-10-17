@@ -6,7 +6,7 @@ import { mailtoUrl, whatsappUrl } from "@/config/site";
 
 // Optional: set VITE_WEB3FORMS_KEY (a public access key from web3forms.com) to deliver
 // the form by email. Without it, the form transparently hands off to WhatsApp or email.
-const FORM_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string | undefined;
+const FORM_KEY = import.meta.env["VITE_WEB3FORMS_KEY"] as string | undefined;
 
 type Fields = { name: string; email: string; phone: string; service: string; subject: string; message: string };
 const empty: Fields = { name: "", email: "", phone: "", service: "", subject: "", message: "" };
@@ -47,7 +47,7 @@ export function ContactForm() {
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ access_key: FORM_KEY, subject: `NEXRON: ${f.subject}`, ...f }),
+        body: JSON.stringify({ ...f, access_key: FORM_KEY, subject: `NEXRON: ${f.subject}` }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error();
